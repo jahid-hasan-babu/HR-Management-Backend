@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String          @id @default(auto()) @map("_id") @db.ObjectId
+  fullName               String
+  email                  String          @unique
+  password               String
+  isDeleted              Boolean         @default(false)
+  isEmailVerified        Boolean         @default(false)
+  role                   UserRoleEnum    @default(USER)
+  status                 UserStatus      @default(ACTIVE)
+  isSubscribed           Boolean         @default(false)
+  planStartDate          DateTime?
+  planEndDate            DateTime?
+  planType               PlanType        @default(FREE)
+  fcmToken               String?
+  profileImage           String?
+  isNotified             Boolean         @default(true)
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  Otp                    Otp?
+
+  @@index([status])
+  @@index([role])
+  @@index([createdAt])
+  @@index([fullName])
+  @@map("users")
+}
+
+model Otp {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  otpCode   Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([otpCode])
+  @@index([expiresAt])
+  @@map("otp")
+}
+
+
+enum RevenueStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELED
+}
+
+enum UserRoleEnum {
+  ADMIN
+  USER
+  PARTNER
+  SUPERADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+  BLOCKED
+  SUSPENDED
+}
+
+enum PlanType {
+  FREE
+  YEARLY
+  MONTHLY
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
