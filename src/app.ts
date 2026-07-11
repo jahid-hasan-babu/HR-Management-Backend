@@ -18,6 +18,7 @@ import reportRoutes from './modules/report/report.routes';
 
 class App {
   public app: Application;
+  private readonly apiPrefix: string = '/api/v1';
 
   constructor() {
     this.app = express();
@@ -105,22 +106,35 @@ class App {
       },
     });
 
-    // Health check
+    const runningResponse = (): IApiResponse<{ status: string }> => ({
+      success: true,
+      statusCode: 200,
+      message: 'Server is running',
+      data: { status: 'OK' },
+    });
+
+    // Root route and health check
+    this.app.get('/', (_req: Request, res: Response): void => {
+      res.status(200).json(runningResponse());
+    });
+
     this.app.get('/health', (_req: Request, res: Response): void => {
-      const response: IApiResponse<{ status: string }> = {
-        success: true,
-        statusCode: 200,
-        message: 'Server is running',
-        data: { status: 'OK' },
-      };
-      res.status(200).json(response);
+      res.status(200).json(runningResponse());
+    });
+
+    this.app.get(`${this.apiPrefix}`, (_req: Request, res: Response): void => {
+      res.status(200).json(runningResponse());
+    });
+
+    this.app.get(`${this.apiPrefix}/health`, (_req: Request, res: Response): void => {
+      res.status(200).json(runningResponse());
     });
 
     // API routes
-    this.app.use('/auth', authLimiter, authRoutes);
-    this.app.use('/employees', employeeRoutes);
-    this.app.use('/attendance', attendanceRoutes);
-    this.app.use('/reports', reportRoutes);
+    this.app.use(`${this.apiPrefix}/auth`, authLimiter, authRoutes);
+    this.app.use(`${this.apiPrefix}/employees`, employeeRoutes);
+    this.app.use(`${this.apiPrefix}/attendance`, attendanceRoutes);
+    this.app.use(`${this.apiPrefix}/reports`, reportRoutes);
 
     // 404 handler for undefined routes
     this.app.use((_req: Request, res: Response): void => {

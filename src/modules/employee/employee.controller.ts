@@ -16,11 +16,6 @@ export class EmployeeController {
   constructor() {
     this.employeeService = new EmployeeService();
   }
-
-  /**
-   * GET /employees
-   * List all employees with optional pagination and search.
-   */
   public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const filters: IEmployeeFilters = req.query as unknown as IEmployeeFilters;
@@ -37,10 +32,6 @@ export class EmployeeController {
     }
   };
 
-  /**
-   * GET /employees/:id
-   * Get a single employee by ID.
-   */
   public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id: number = Number(req.params.id);
@@ -51,15 +42,10 @@ export class EmployeeController {
     }
   };
 
-  /**
-   * POST /employees
-   * Create a new employee. Supports multipart/form-data for photo upload.
-   */
   public create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const payload: ICreateEmployeePayload = req.body as ICreateEmployeePayload;
 
-      // If a photo was uploaded, add the file path to payload
       if (req.file) {
         payload.photo_path = req.file.path;
       }
@@ -71,16 +57,11 @@ export class EmployeeController {
     }
   };
 
-  /**
-   * PUT /employees/:id
-   * Update employee details. Also allows updating/replacing photo.
-   */
   public update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id: number = Number(req.params.id);
       const payload: IUpdateEmployeePayload = req.body as IUpdateEmployeePayload;
 
-      // If a new photo was uploaded, add the file path to payload
       if (req.file) {
         payload.photo_path = req.file.path;
       }
@@ -92,10 +73,6 @@ export class EmployeeController {
     }
   };
 
-  /**
-   * DELETE /employees/:id
-   * Soft delete an employee.
-   */
   public delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id: number = Number(req.params.id);

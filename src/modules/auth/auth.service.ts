@@ -6,28 +6,21 @@ import { IHrUser, IJwtPayload, ILoginPayload, ILoginResponse } from '../../types
 import { HttpException } from '../../errors/HttpException';
 
 export class AuthService {
-  /**
-   * Authenticate an HR user with email and password.
-   * Returns a JWT token and user details on success.
-   */
   public async login(payload: ILoginPayload): Promise<ILoginResponse> {
     const { email, password } = payload;
 
-    // Find user by email
     const user: IHrUser | undefined = await db('hr_users').where({ email }).first();
 
     if (!user) {
       throw HttpException.unauthorized('Invalid email or password.');
     }
 
-    // Compare password with hash
     const isPasswordValid: boolean = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
-      throw HttpException.unauthorized('Invalid email or password.');
+      throw HttpException.unauthorized('Invalid password.');
     }
 
-    // Generate JWT token
     const jwtPayload: IJwtPayload = {
       id: user.id,
       email: user.email,

@@ -11,10 +11,6 @@ export class AuthController {
     this.authService = new AuthService();
   }
 
-  /**
-   * POST /auth/login
-   * Authenticates an HR user and returns a JWT token.
-   */
   public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const payload: ILoginPayload = req.body as ILoginPayload;
