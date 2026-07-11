@@ -35,5 +35,6 @@ export interface IUpdateEmployeePayload {
 }
 
 export interface IEmployeeFilters extends IPaginationQuery {
+  id?: number;
   search?: string;
 }

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ReportService } from './report.service';
-import { IMonthlyReportQuery, IMonthlyReportEntry } from '../../types/attendance.types';
+import { IAttendanceReportQuery, IAttendanceReportEntry } from '../../types/attendance.types';
 import { sendResponse } from '../../utils/response';
 import httpStatus from 'http-status';
 
@@ -11,23 +11,18 @@ export class ReportController {
     this.reportService = new ReportService();
   }
 
-  /**
-   * GET /reports/attendance
-   * Monthly attendance summary report.
-   * Query: month=YYYY-MM (required), employee_id (optional)
-   */
-  public getMonthlyAttendance = async (
+  public getAttendanceSummary = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const query: IMonthlyReportQuery = req.query as unknown as IMonthlyReportQuery;
-      const report: IMonthlyReportEntry[] = await this.reportService.getMonthlyAttendance(query);
-      sendResponse<IMonthlyReportEntry[]>(
+      const query: IAttendanceReportQuery = req.query as unknown as IAttendanceReportQuery;
+      const report: IAttendanceReportEntry[] = await this.reportService.getAttendanceSummary(query);
+      sendResponse<IAttendanceReportEntry[]>(
         res,
         httpStatus.OK,
-        'Monthly attendance report generated successfully',
+        'Attendance report generated successfully',
         report,
       );
     } catch (error) {

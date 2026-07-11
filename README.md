@@ -57,6 +57,8 @@ After seeding, you can login with:
 
 ## API Endpoints
 
+API Documentation: https://july-s-team.docs.buildwithfern.com
+
 ### Authentication
 | Method | Endpoint | Description |
 |--------|----------|-------------|

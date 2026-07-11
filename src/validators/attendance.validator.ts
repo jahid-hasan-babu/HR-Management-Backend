@@ -59,10 +59,52 @@ export const attendanceParamSchema: Joi.ObjectSchema = Joi.object({
 export const reportQuerySchema: Joi.ObjectSchema = Joi.object({
   month: Joi.string()
     .pattern(/^\d{4}-(0[1-9]|1[0-2])$/)
-    .required()
+    .optional()
     .messages({
       'string.pattern.base': 'Month must be in YYYY-MM format',
-      'any.required': 'Month is required',
     }),
+  from: Joi.date().iso().optional().messages({
+    'date.format': 'From date must be in ISO date format (YYYY-MM-DD)',
+  }),
+  to: Joi.date().iso().optional().messages({
+    'date.format': 'To date must be in ISO date format (YYYY-MM-DD)',
+  }),
   employee_id: Joi.number().integer().positive().optional(),
-});
+  search: Joi.string().allow('').optional(),
+})
+  .custom((value, helpers) => {
+    const hasMonth: boolean = Boolean(value.month);
+    const hasFrom: boolean = Boolean(value.from);
+    const hasTo: boolean = Boolean(value.to);
+
+    if (hasMonth) {
+      if (hasFrom || hasTo) {
+        return helpers.error('any.custom', {
+          message: 'Provide either month or from/to, not both',
+        });
+      }
+
+      return value;
+    }
+
+    if (hasFrom || hasTo) {
+      if (!hasFrom || !hasTo) {
+        return helpers.error('any.custom', {
+          message: 'Both from and to are required when month is not provided',
+        });
+      }
+
+      if (new Date(value.from) > new Date(value.to)) {
+        return helpers.error('any.custom', { message: 'From date cannot be after To date' });
+      }
+
+      return value;
+    }
+
+    return helpers.error('any.custom', {
+      message: 'Month is required when from and to are not provided',
+    });
+  })
+  .messages({
+    'any.custom': '{{#message}}',
+  });

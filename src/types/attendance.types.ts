@@ -29,14 +29,20 @@ export interface IAttendanceFilters extends IPaginationQuery {
   to?: string;
 }
 
-export interface IMonthlyReportQuery {
-  month: string;
+export interface IAttendanceReportQuery {
+  month?: string;
+  from?: string;
+  to?: string;
   employee_id?: number;
+  search?: string;
 }
 
-export interface IMonthlyReportEntry {
+export interface IAttendanceReportEntry {
   employee_id: number;
   name: string;
   days_present: number;
   times_late: number;
 }
+
+export type IMonthlyReportQuery = IAttendanceReportQuery;
+export type IMonthlyReportEntry = IAttendanceReportEntry;
