@@ -5,9 +5,10 @@ export const createAttendanceSchema: Joi.ObjectSchema = Joi.object({
     'number.base': 'Employee ID must be a number',
     'any.required': 'Employee ID is required',
   }),
-  date: Joi.date().iso().required().messages({
+  date: Joi.date().iso().max('now').required().messages({
     'date.format': 'Date must be in ISO date format (YYYY-MM-DD)',
     'any.required': 'Date is required',
+    'date.max': 'Date cannot be in the future',
   }),
   check_in_time: Joi.string()
     .pattern(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/)
@@ -20,11 +21,19 @@ export const createAttendanceSchema: Joi.ObjectSchema = Joi.object({
 
 export const updateAttendanceSchema: Joi.ObjectSchema = Joi.object({
   employee_id: Joi.number().integer().positive(),
-  date: Joi.date().iso(),
+  date: Joi.date().iso().max('now').messages({
+    'date.format': 'Date must be in ISO date format (YYYY-MM-DD)',
+    'date.max': 'Date cannot be in the future',
+  }),
   check_in_time: Joi.string()
     .pattern(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/)
     .messages({
       'string.pattern.base': 'Check-in time must be in HH:MM or HH:MM:SS format',
+    }),
+  check_out_time: Joi.string()
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/)
+    .messages({
+      'string.pattern.base': 'Check-out time must be in HH:MM or HH:MM:SS format',
     }),
 })
   .min(1)

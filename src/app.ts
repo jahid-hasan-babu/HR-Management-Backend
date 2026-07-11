@@ -33,18 +33,13 @@ class App {
    * Initialize security middlewares to protect against common attacks.
    */
   private initializeSecurityMiddlewares(): void {
-    // Helmet: sets various HTTP security headers
-    // - Content-Security-Policy, X-Content-Type-Options, X-Frame-Options,
-    // - X-XSS-Protection, Strict-Transport-Security, etc.
     this.app.use(helmet());
 
-    // Global rate limiter: max 100 requests per 15 minutes per IP
-    // Prevents brute-force attacks and DDoS
     const globalLimiter: RateLimitRequestHandler = rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // limit each IP to 100 requests per windowMs
-      standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
-      legacyHeaders: false, // Disable `X-RateLimit-*` headers
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+      standardHeaders: true,
+      legacyHeaders: false,
       message: {
         success: false,
         statusCode: 429,
@@ -52,35 +47,21 @@ class App {
       },
     });
     this.app.use(globalLimiter);
-
-    // HPP: protect against HTTP Parameter Pollution attacks
     this.app.use(hpp());
-
-    // CORS: restrict cross-origin requests
     this.app.use(cors());
-
-    // Disable X-Powered-By header (already handled by helmet, but extra safety)
     this.app.disable('x-powered-by');
   }
 
-  /**
-   * Initialize general-purpose middlewares.
-   */
   private initializeMiddlewares(): void {
-    // Body parsers with size limits to prevent large payload attacks
     this.app.use(express.json({ limit: '10kb' }));
     this.app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
     // HTTP request logger
     this.app.use(morgan('dev'));
 
-    // Serve uploaded files as static assets
     this.app.use('/uploads', express.static(path.resolve(envConfig.UPLOAD_PATH)));
   }
 
-  /**
-   * Ensure the upload directory exists.
-   */
   private initializeUploadDir(): void {
     const uploadDir: string = path.resolve(envConfig.UPLOAD_PATH);
     if (!fs.existsSync(uploadDir)) {
@@ -92,11 +73,9 @@ class App {
    * Mount all route modules.
    */
   private initializeRoutes(): void {
-    // Stricter rate limiter for auth routes (brute-force protection)
-    // Max 10 login attempts per 15 minutes per IP
     const authLimiter: RateLimitRequestHandler = rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 10, // limit each IP to 10 login attempts per windowMs
+      windowMs: 15 * 60 * 1000,
+      max: 10,
       standardHeaders: true,
       legacyHeaders: false,
       message: {
@@ -147,9 +126,6 @@ class App {
     });
   }
 
-  /**
-   * Initialize global error handling middleware.
-   */
   private initializeErrorHandling(): void {
     this.app.use(errorMiddleware);
   }

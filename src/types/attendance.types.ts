@@ -5,6 +5,7 @@ export interface IAttendance {
   employee_id: number;
   date: string;
   check_in_time: string;
+  check_out_time: string | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -19,6 +20,7 @@ export interface IUpdateAttendancePayload {
   employee_id?: number;
   date?: string;
   check_in_time?: string;
+  check_out_time?: string | null;
 }
 
 export interface IAttendanceFilters extends IPaginationQuery {

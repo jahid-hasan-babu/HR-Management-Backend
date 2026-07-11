@@ -17,10 +17,6 @@ export class AttendanceController {
     this.attendanceService = new AttendanceService();
   }
 
-  /**
-   * GET /attendance
-   * List attendance entries with optional filters.
-   */
   public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const filters: IAttendanceFilters = req.query as unknown as IAttendanceFilters;
@@ -37,10 +33,6 @@ export class AttendanceController {
     }
   };
 
-  /**
-   * GET /attendance/:id
-   * Get a single attendance entry.
-   */
   public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id: number = Number(req.params.id);
@@ -56,10 +48,6 @@ export class AttendanceController {
     }
   };
 
-  /**
-   * POST /attendance
-   * Create or upsert an attendance entry.
-   */
   public create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const payload: ICreateAttendancePayload = req.body as ICreateAttendancePayload;
@@ -75,10 +63,6 @@ export class AttendanceController {
     }
   };
 
-  /**
-   * PUT /attendance/:id
-   * Update an attendance entry.
-   */
   public update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id: number = Number(req.params.id);
@@ -95,10 +79,6 @@ export class AttendanceController {
     }
   };
 
-  /**
-   * DELETE /attendance/:id
-   * Delete an attendance entry.
-   */
   public delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id: number = Number(req.params.id);
