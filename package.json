@@ -4,9 +4,9 @@
   "description": "HR Management RESTful API with TypeScript, Express, Knex, and PostgreSQL",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
+    "dev": "node init && ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "node init && tsc",
+    "start": "node init && node dist/server.js",
     "migrate": "knex migrate:latest --knexfile knexfile.ts",
     "migrate:rollback": "knex migrate:rollback --knexfile knexfile.ts",
     "seed": "knex seed:run --knexfile knexfile.ts",
@@ -38,6 +38,7 @@
     "knex": "^3.1.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
     "pg": "^8.13.1"
   },
   "devDependencies": {

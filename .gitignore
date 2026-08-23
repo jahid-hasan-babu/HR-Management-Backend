@@ -5,7 +5,6 @@ node_modules/
 dist/
 
 # Environment variables
-.env
 
 
 # Uploads
@@ -17,7 +16,6 @@ logs/
 npm-debug.log*
 
 # IDE
-.vscode/
 .idea/
 
 # OS
@@ -36,3 +34,4 @@ coverage/
 # Misc
 .codegpt
 .qodo
+config.bat
